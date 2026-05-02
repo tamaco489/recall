@@ -1,0 +1,25 @@
+{
+  "name": "recall",
+  "version": "0.1.0",
+  "description": "Session memory MCP server for Claude Code",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "recall": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "download-model": "tsx scripts/download-model.ts"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.5.1",
+    "@modelcontextprotocol/sdk": "^1.11.2",
+    "@qdrant/js-client-rest": "^1.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}
