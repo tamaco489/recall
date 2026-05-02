@@ -28,7 +28,7 @@ clean: ## ビルド成果物 (dist/) を削除する
 # =================================================================
 # Qdrant
 # =================================================================
-.PHONY: up down logs
+.PHONY: up down logs rebuild
 up: ## Qdrant コンテナを起動する
 	docker compose up -d
 
@@ -37,6 +37,11 @@ down: ## Qdrant コンテナを停止・削除する
 
 logs: ## Qdrant コンテナのログを表示する
 	docker compose logs -f qdrant
+
+rebuild: ## Qdrant コンテナをキャッシュなしで再ビルドして起動する
+	docker compose down -v
+	docker compose pull
+	docker compose up -d
 
 
 # =================================================================
