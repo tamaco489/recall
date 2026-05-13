@@ -13,7 +13,7 @@
     "download-model": "tsx scripts/download-model.ts"
   },
   "dependencies": {
-    "@huggingface/transformers": "^3.5.1",
+    "@huggingface/transformers": "^4.0.0",
     "@modelcontextprotocol/sdk": "^1.11.2",
     "@qdrant/js-client-rest": "^1.13.0"
   },
