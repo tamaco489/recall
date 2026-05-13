@@ -1,8 +1,9 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ToolName } from "@/constants/index.js";
+import type { SessionPayload } from "@/models/session.js";
 import { listSessions, loadSession } from "@/store/index.js";
-import { catchToErrorResponse } from "@/errors/index.js";
+import { withErrorHandling } from "@/errors/index.js";
 
 /**
  * 対象セッションの生データを返す。
@@ -33,9 +34,9 @@ export function registerCompactSessions(server: McpServer): void {
           ),
       },
     },
-    async ({ session_ids, repo, before }) => {
-      try {
-        let targets: Array<{ id: string; payload: unknown }>;
+    ({ session_ids, repo, before }) =>
+      withErrorHandling(async () => {
+        let targets: Array<{ id: string; payload: SessionPayload }>;
 
         if (session_ids && session_ids.length > 0) {
           const results = await Promise.all(session_ids.map(loadSession));
@@ -67,9 +68,6 @@ export function registerCompactSessions(server: McpServer): void {
             },
           ],
         };
-      } catch (err) {
-        return catchToErrorResponse(err);
-      }
-    },
+      }),
   );
 }

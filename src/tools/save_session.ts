@@ -3,7 +3,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ToolName } from "@/constants/index.js";
 import { saveSession } from "@/store/index.js";
 import { SessionInputSchema, type SessionInput } from "@/tools/schemas.js";
-import { catchToErrorResponse } from "@/errors/index.js";
+import { withErrorHandling } from "@/errors/index.js";
 
 /**
  * 確認済みセッションデータを Qdrant に保存する。
@@ -27,11 +27,8 @@ export function registerSaveSession(server: McpServer): void {
           ),
       },
     },
-    async ({
-      source_ids,
-      ...input
-    }: SessionInput & { source_ids?: string[] }) => {
-      try {
+    ({ source_ids, ...input }: SessionInput & { source_ids?: string[] }) =>
+      withErrorHandling(async () => {
         const result = await saveSession(
           {
             ...input,
@@ -47,9 +44,6 @@ export function registerSaveSession(server: McpServer): void {
         ].join("\n");
 
         return { content: [{ type: "text", text }] };
-      } catch (err) {
-        return catchToErrorResponse(err);
-      }
-    },
+      }),
   );
 }

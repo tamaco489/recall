@@ -7,7 +7,7 @@ import {
 } from "@/constants/index.js";
 import { listSessions } from "@/store/index.js";
 import { formatSessionLine } from "@/tools/format.js";
-import { catchToErrorResponse } from "@/errors/index.js";
+import { withErrorHandling } from "@/errors/index.js";
 
 /** 最近のセッションを番号付き一覧で返す */
 export function registerListSessions(server: McpServer): void {
@@ -27,8 +27,8 @@ export function registerListSessions(server: McpServer): void {
         layer: z.string().optional().describe("layer での絞り込み"),
       },
     },
-    async ({ limit, repo, layer }) => {
-      try {
+    ({ limit, repo, layer }) =>
+      withErrorHandling(async () => {
         const sessions = await listSessions(limit, repo, layer);
 
         if (sessions.length === 0) {
@@ -44,9 +44,6 @@ export function registerListSessions(server: McpServer): void {
         );
 
         return { content: [{ type: "text", text: lines.join("\n\n") }] };
-      } catch (err) {
-        return catchToErrorResponse(err);
-      }
-    },
+      }),
   );
 }

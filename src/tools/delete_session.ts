@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ToolName } from "@/constants/index.js";
 import { deleteSessions } from "@/store/index.js";
-import { catchToErrorResponse } from "@/errors/index.js";
+import { withErrorHandling } from "@/errors/index.js";
 
 /** session_ids の配列で複数件削除する */
 export function registerDeleteSession(server: McpServer): void {
@@ -17,8 +17,8 @@ export function registerDeleteSession(server: McpServer): void {
           .describe("削除対象のセッション ID の配列"),
       },
     },
-    async ({ session_ids }) => {
-      try {
+    ({ session_ids }) =>
+      withErrorHandling(async () => {
         const result = await deleteSessions(session_ids);
         return {
           content: [
@@ -28,9 +28,6 @@ export function registerDeleteSession(server: McpServer): void {
             },
           ],
         };
-      } catch (err) {
-        return catchToErrorResponse(err);
-      }
-    },
+      }),
   );
 }
