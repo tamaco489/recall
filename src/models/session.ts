@@ -1,3 +1,23 @@
+import type {
+  Repo,
+  Phase,
+  BlockedBy,
+  CodeReference,
+  ExternalReference,
+  GitHubReference,
+  Artifact,
+} from "@/schemas/index.js";
+
+export type {
+  Repo,
+  Phase,
+  BlockedBy,
+  CodeReference,
+  ExternalReference,
+  GitHubReference,
+  Artifact,
+};
+
 export const Status = {
   InProgress: "in_progress",
   Blocked: "blocked",
@@ -17,52 +37,6 @@ export const Layer = {
 } as const;
 
 export type Layer = (typeof Layer)[keyof typeof Layer];
-
-export type Repo = {
-  owner: string;
-  repo: string;
-  role: "primary" | "related";
-};
-
-export type Phase = {
-  current: number;
-  total: number;
-  completed_phases: string[];
-  next_action: string;
-};
-
-export type BlockedBy = {
-  type: "issue" | "pr" | "session";
-  url: string;
-  title: string;
-  reason: string;
-};
-
-export type CodeReference = {
-  file: string;
-  symbols: string[];
-  note: string;
-};
-
-export type ExternalReference = {
-  url: string;
-  title: string;
-  quote: string;
-  note: string;
-};
-
-export type GitHubReference = {
-  type: "issue" | "pr" | "discussion";
-  url: string;
-  title: string;
-  note: string;
-};
-
-export type Artifact = {
-  type: "branch" | "migration" | "tag" | "file";
-  path: string;
-  note: string;
-};
 
 export type SessionPayload = {
   title: string;
