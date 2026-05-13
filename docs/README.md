@@ -10,28 +10,71 @@ Stores and retrieves conversation context using Qdrant as a vector store.
 - Node.js >= 22
 - Docker
 
-## Setup
+## Installation
 
 ```bash
-# Install dependencies and download embedding model
+# 1. Clone the repository
+git clone https://github.com/tamaco489/recall.git
+cd recall
+
+# 2. Install dependencies and download the embedding model
 make setup
 
-# Start Qdrant
+# 3. Start Qdrant
 make up
 
-# Build and start MCP server
-make start
+# 4. Build
+make build
 ```
 
-## Development Commands
+## Register with Claude Code
 
-| Command       | Description                           |
-| ------------- | ------------------------------------- |
-| `make setup`  | Install dependencies & download model |
-| `make build`  | Compile TypeScript                    |
-| `make dev`    | Watch mode build                      |
-| `make start`  | Build and start MCP server            |
-| `make up`     | Start Qdrant container                |
-| `make down`   | Stop Qdrant container                 |
-| `make health` | Check Qdrant health                   |
-| `make clean`  | Remove build artifacts                |
+Replace `/path/to/recall` with the absolute path where you cloned the repository.
+
+**Global (available from any repository):**
+
+```bash
+claude mcp add --scope user recall -- node /path/to/recall/dist/index.js
+```
+
+**Per-project, shared with team (stored in `.claude/settings.json`):**
+
+```bash
+claude mcp add --scope project recall -- node /path/to/recall/dist/index.js
+```
+
+**Per-project, personal only (stored in `~/.claude.json` scoped to the project):**
+
+```bash
+claude mcp add --scope local recall -- node /path/to/recall/dist/index.js
+```
+
+Verify registration:
+
+```bash
+claude mcp list
+```
+
+Restart Claude Code to apply the change.
+
+## Available Tools
+
+| Tool              | Description                            |
+| ----------------- | -------------------------------------- |
+| `preview_session` | Preview session data before saving     |
+| `save_session`    | Save a session to Qdrant               |
+| `list_sessions`   | List recent sessions in reverse order  |
+| `load_session`    | Load a session by number or session ID |
+
+## Usage Example
+
+```text
+# Preview and save
+Preview and save today's work. Title: "recall Phase 5", repo: tamaco489/recall, layer: backend
+
+# List sessions
+Show me the list with list_sessions
+
+# Load a session
+Load session number 1
+```
