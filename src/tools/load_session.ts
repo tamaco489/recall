@@ -28,19 +28,6 @@ export function registerLoadSession(server: McpServer): void {
       },
     },
     async ({ number, session_id }) => {
-      if (!number && !session_id) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: "number または session_id のいずれかを指定してください。",
-            },
-          ],
-        };
-      }
-
-      let id = session_id;
-
       if (number !== undefined) {
         const sessions = await listSessions(LIST_MAX_LIMIT);
         const target = sessions[number - 1];
@@ -54,16 +41,46 @@ export function registerLoadSession(server: McpServer): void {
             ],
           };
         }
-        id = target.id;
-      }
-
-      const result = await loadSession(id!);
-      if (!result) {
+        const byNumber = await loadSession(target.id);
+        if (!byNumber) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `session_id: ${target.id} が見つかりませんでした。`,
+              },
+            ],
+          };
+        }
         return {
           content: [
             {
               type: "text",
-              text: `session_id: ${id} が見つかりませんでした。`,
+              text: formatSessionDetail(byNumber.id, byNumber.payload),
+            },
+          ],
+        };
+      }
+
+      if (!session_id) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: "number または session_id のいずれかを指定してください。",
+            },
+          ],
+        };
+      }
+
+      // ここでは session_id が string に絞り込まれる
+      const byId = await loadSession(session_id);
+      if (!byId) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `session_id: ${session_id} が見つかりませんでした。`,
             },
           ],
         };
@@ -73,7 +90,7 @@ export function registerLoadSession(server: McpServer): void {
         content: [
           {
             type: "text",
-            text: formatSessionDetail(result.id, result.payload),
+            text: formatSessionDetail(byId.id, byId.payload),
           },
         ],
       };
