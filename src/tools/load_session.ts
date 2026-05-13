@@ -3,11 +3,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ToolName, LIST_MAX_LIMIT } from "@/constants/index.js";
 import { loadSession, listSessions } from "@/store/index.js";
 import { formatSessionDetail } from "@/tools/format.js";
-import {
-  ErrorCode,
-  errorResponse,
-  catchToErrorResponse,
-} from "@/errors/index.js";
+import { ErrorCode, errorResponse, withErrorHandling } from "@/errors/index.js";
 
 /**
  * 番号または session_id を指定してセッションを完全ロードする。
@@ -32,8 +28,8 @@ export function registerLoadSession(server: McpServer): void {
           .describe("セッション ID を直接指定する場合"),
       },
     },
-    async ({ number, session_id }) => {
-      try {
+    ({ number, session_id }) =>
+      withErrorHandling(async () => {
         if (number !== undefined) {
           const sessions = await listSessions(LIST_MAX_LIMIT);
           const target = sessions[number - 1];
@@ -43,18 +39,12 @@ export function registerLoadSession(server: McpServer): void {
               `番号 ${number} のセッションが見つかりませんでした`,
             );
           }
-          const byNumber = await loadSession(target.id);
-          if (!byNumber) {
-            return errorResponse(
-              ErrorCode.SessionNotFound,
-              `session_id: ${target.id} が見つかりませんでした`,
-            );
-          }
+          // listSessions は with_payload: true で取得しているため再フェッチ不要
           return {
             content: [
               {
                 type: "text",
-                text: formatSessionDetail(byNumber.id, byNumber.payload),
+                text: formatSessionDetail(target.id, target.payload),
               },
             ],
           };
@@ -83,9 +73,6 @@ export function registerLoadSession(server: McpServer): void {
             },
           ],
         };
-      } catch (err) {
-        return catchToErrorResponse(err);
-      }
-    },
+      }),
   );
 }

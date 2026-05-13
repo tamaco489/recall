@@ -7,6 +7,11 @@ import {
 import { embed } from "@/embedder/index.js";
 import { qdrant } from "@/store/client.js";
 
+/** Qdrant から返される payload を SessionPayload にキャストする */
+function asSessionPayload(raw: unknown): SessionPayload {
+  return raw as SessionPayload;
+}
+
 /** repo / layer フィルターを Qdrant Filter 形式に変換する */
 function buildFilter(repo?: string, layer?: string) {
   const must: unknown[] = [];
@@ -43,7 +48,7 @@ export async function listSessions(
 
   return result.points.map((p) => ({
     id: String(p.id),
-    payload: p.payload as unknown as SessionPayload,
+    payload: asSessionPayload(p.payload),
   }));
 }
 
@@ -68,7 +73,7 @@ export async function searchSessions(
   return result.map((p) => ({
     id: String(p.id),
     score: p.score,
-    payload: p.payload as unknown as SessionPayload,
+    payload: asSessionPayload(p.payload),
   }));
 }
 
@@ -86,6 +91,6 @@ export async function loadSession(
   const point = result[0];
   return {
     id: String(point.id),
-    payload: point.payload as unknown as SessionPayload,
+    payload: asSessionPayload(point.payload),
   };
 }

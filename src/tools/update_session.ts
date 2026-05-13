@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ToolName } from "@/constants/index.js";
 import { updateSession } from "@/store/index.js";
-import { catchToErrorResponse } from "@/errors/index.js";
+import { withErrorHandling } from "@/errors/index.js";
 
 /** 指定フィールドのみ部分更新する。ベクター再生成が必要なフィールドは自動的に再生成する */
 export function registerUpdateSession(server: McpServer): void {
@@ -92,8 +92,8 @@ export function registerUpdateSession(server: McpServer): void {
         tags: z.array(z.string()).optional().describe("検索用タグ"),
       },
     },
-    async ({ session_id, ...updates }) => {
-      try {
+    ({ session_id, ...updates }) =>
+      withErrorHandling(async () => {
         const result = await updateSession(session_id, updates);
         return {
           content: [
@@ -103,9 +103,6 @@ export function registerUpdateSession(server: McpServer): void {
             },
           ],
         };
-      } catch (err) {
-        return catchToErrorResponse(err);
-      }
-    },
+      }),
   );
 }

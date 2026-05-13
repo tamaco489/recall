@@ -46,8 +46,11 @@ export class AppError extends Error {
   }
 }
 
+/** MCP ツールハンドラーの共通レスポンス型 */
+export type ToolResponse = { content: Array<{ type: "text"; text: string }> };
+
 /** エラーを MCP レスポンス形式に変換する */
-export function errorResponse(code: ErrorCode, message: string) {
+export function errorResponse(code: ErrorCode, message: string): ToolResponse {
   return {
     content: [
       {
@@ -63,7 +66,7 @@ export function errorResponse(code: ErrorCode, message: string) {
 }
 
 /** catch ブロックで受け取った unknown をエラーレスポンスに変換する */
-export function catchToErrorResponse(err: unknown) {
+export function catchToErrorResponse(err: unknown): ToolResponse {
   if (err instanceof AppError) {
     return errorResponse(err.code, err.message);
   }
@@ -83,4 +86,19 @@ export function catchToErrorResponse(err: unknown) {
   }
 
   throw err;
+}
+
+/**
+ * ツールハンドラーを try-catch でラップし、エラー時に共通レスポンスを返す。
+ *
+ * 各ツールで繰り返される try-catch ボイラープレートを削減するためのヘルパー。
+ */
+export async function withErrorHandling(
+  fn: () => Promise<ToolResponse>,
+): Promise<ToolResponse> {
+  try {
+    return await fn();
+  } catch (err) {
+    return catchToErrorResponse(err);
+  }
 }

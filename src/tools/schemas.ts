@@ -1,50 +1,13 @@
 import { z } from "zod";
-
-const RepoSchema = z.object({
-  owner: z.string(),
-  repo: z.string(),
-  role: z.enum(["primary", "related"]),
-});
-
-const PhaseSchema = z.object({
-  current: z.number(),
-  total: z.number(),
-  completed_phases: z.array(z.string()),
-  next_action: z.string(),
-});
-
-const BlockedBySchema = z.object({
-  type: z.enum(["issue", "pr", "session"]),
-  url: z.string(),
-  title: z.string(),
-  reason: z.string(),
-});
-
-const CodeReferenceSchema = z.object({
-  file: z.string(),
-  symbols: z.array(z.string()),
-  note: z.string(),
-});
-
-const ExternalReferenceSchema = z.object({
-  url: z.string(),
-  title: z.string(),
-  quote: z.string(),
-  note: z.string(),
-});
-
-const GitHubReferenceSchema = z.object({
-  type: z.enum(["issue", "pr", "discussion"]),
-  url: z.string(),
-  title: z.string(),
-  note: z.string(),
-});
-
-const ArtifactSchema = z.object({
-  type: z.enum(["branch", "migration", "tag", "file"]),
-  path: z.string(),
-  note: z.string(),
-});
+import {
+  RepoSchema,
+  PhaseSchema,
+  BlockedBySchema,
+  CodeReferenceSchema,
+  ExternalReferenceSchema,
+  GitHubReferenceSchema,
+  ArtifactSchema,
+} from "@/schemas/index.js";
 
 /** save_session / preview_session の共通入力スキーマ */
 export const SessionInputSchema = z.object({
