@@ -1,5 +1,5 @@
 import { pipeline } from "@huggingface/transformers";
-import { EMBED_MODEL, PipelineTask } from "../src/constants.js";
+import { EMBED_MODEL, PipelineTask } from "../src/constants/embed.js";
 
 process.stderr.write(`モデルをダウンロード中: ${EMBED_MODEL}\n`);
 await pipeline(PipelineTask.FeatureExtraction, EMBED_MODEL);

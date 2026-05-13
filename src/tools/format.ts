@@ -3,7 +3,7 @@ import type { SessionPayload } from "@/models/session.js";
 /** list_sessions / search_sessions の1行フォーマット */
 export function formatSessionLine(
   index: number,
-  id: string,
+  _id: string,
   payload: SessionPayload,
   score?: number,
 ): string {
@@ -44,7 +44,11 @@ export function formatSessionDetail(
 
   if (payload.phase) {
     lines.push(`\nphase: ${payload.phase.current} / ${payload.phase.total}`);
-    lines.push(`  completed: ${payload.phase.completed_phases.join(", ")}`);
+    const completed =
+      payload.phase.completed_phases.length > 0
+        ? payload.phase.completed_phases.join(", ")
+        : "(なし)";
+    lines.push(`  completed: ${completed}`);
     lines.push(`  next_action: ${payload.phase.next_action}`);
   }
 

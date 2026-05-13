@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ToolName } from "@/constants/index.js";
 import { saveSession } from "@/store/index.js";
-import { SessionInputSchema } from "@/tools/schemas.js";
+import { SessionInputSchema, type SessionInput } from "@/tools/schemas.js";
 
 /**
  * 確認済みセッションデータを Qdrant に保存する。
@@ -17,7 +17,7 @@ export function registerSaveSession(server: McpServer): void {
       description:
         "確認済みセッションデータを Qdrant に保存する。preview_session でユーザーの確認が取れてから呼び出す。",
       inputSchema: {
-        ...SessionInputSchema,
+        ...SessionInputSchema.shape,
         source_ids: z
           .array(z.string())
           .optional()
@@ -26,7 +26,10 @@ export function registerSaveSession(server: McpServer): void {
           ),
       },
     },
-    async ({ source_ids, ...input }) => {
+    async ({
+      source_ids,
+      ...input
+    }: SessionInput & { source_ids?: string[] }) => {
       const result = await saveSession(
         {
           ...input,

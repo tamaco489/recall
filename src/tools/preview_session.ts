@@ -1,6 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ToolName } from "@/constants/index.js";
-import { SessionInputSchema } from "@/tools/schemas.js";
+import { SessionInputSchema, type SessionInput } from "@/tools/schemas.js";
 import { formatSessionDetail } from "@/tools/format.js";
 
 /**
@@ -15,9 +15,9 @@ export function registerPreviewSession(server: McpServer): void {
     {
       description:
         "保存予定のセッションデータをプレビューする。Qdrant への書き込みは行わない。ユーザーが OK を出したら save_session を呼び出す。",
-      inputSchema: SessionInputSchema,
+      inputSchema: SessionInputSchema.shape,
     },
-    async (input) => {
+    async (input: SessionInput) => {
       const payload = {
         ...input,
         compacted: false,

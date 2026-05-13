@@ -47,7 +47,7 @@ const ArtifactSchema = z.object({
 });
 
 /** save_session / preview_session の共通入力スキーマ */
-export const SessionInputSchema = {
+export const SessionInputSchema = z.object({
   title: z.string().describe("セッションの短いタイトル"),
   summary: z.string().describe("セッション全体の要約 (500字程度)"),
   status: z
@@ -75,4 +75,6 @@ export const SessionInputSchema = {
     .describe("関連 Issue / PR / Discussion (なければ [])"),
   artifacts: z.array(ArtifactSchema).describe("成果物 (なければ [])"),
   tags: z.array(z.string()).describe("検索用タグ"),
-};
+});
+
+export type SessionInput = z.infer<typeof SessionInputSchema>;
