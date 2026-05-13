@@ -142,16 +142,12 @@ push 完了後、GitHub MCP (`list_pull_requests`) で現在のブランチの P
 
 **PR のフォーマット:**
 
+- `.github/PULL_REQUEST_TEMPLATE.md` のテンプレートに従う
+- 本文中の文章は句点 (。) の後に改行を入れる
+
 ```text
 タイトル: コミットメッセージ群から自動生成（最も変更量の多いグループのメッセージを使用）
-本文:
-  ## 変更内容
-  - 各コミットの概要を箇条書きで列挙
-
-  ## 変更ファイル
-  - 変更ファイルの一覧
-
-  🤖 Generated with Claude Code
+本文: .github/PULL_REQUEST_TEMPLATE.md のテンプレートに従う
 ```
 
 - base ブランチは `main` に固定する
