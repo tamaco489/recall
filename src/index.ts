@@ -9,3 +9,4 @@ const server = new McpServer({
 
 const transport = new StdioServerTransport();
 await server.connect(transport);
+process.stderr.write("recall MCP server started\n");
