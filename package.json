@@ -8,7 +8,7 @@
     "recall": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "dev": "tsc --watch",
     "download-model": "tsx scripts/download-model.ts"
   },
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
+    "tsc-alias": "^1.8.17",
     "tsx": "^4.19.4",
     "typescript": "^6.0.0"
   }
