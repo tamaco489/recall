@@ -7,6 +7,7 @@ import {
 } from "@/constants/index.js";
 import { searchSessions } from "@/store/index.js";
 import { formatSessionLine } from "@/tools/format.js";
+import { catchToErrorResponse } from "@/errors/index.js";
 
 /** 自然言語クエリでセマンティック検索し、スコア付き番号一覧で返す */
 export function registerSearchSessions(server: McpServer): void {
@@ -28,24 +29,28 @@ export function registerSearchSessions(server: McpServer): void {
       },
     },
     async ({ query, limit, repo, layer }) => {
-      const sessions = await searchSessions(query, limit, repo, layer);
+      try {
+        const sessions = await searchSessions(query, limit, repo, layer);
 
-      if (sessions.length === 0) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: "該当するセッションが見つかりませんでした。",
-            },
-          ],
-        };
+        if (sessions.length === 0) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: "該当するセッションが見つかりませんでした。",
+              },
+            ],
+          };
+        }
+
+        const lines = sessions.map((s, i) =>
+          formatSessionLine(i + 1, s.id, s.payload, s.score),
+        );
+
+        return { content: [{ type: "text", text: lines.join("\n\n") }] };
+      } catch (err) {
+        return catchToErrorResponse(err);
       }
-
-      const lines = sessions.map((s, i) =>
-        formatSessionLine(i + 1, s.id, s.payload, s.score),
-      );
-
-      return { content: [{ type: "text", text: lines.join("\n\n") }] };
     },
   );
 }

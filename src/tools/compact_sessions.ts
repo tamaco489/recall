@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ToolName } from "@/constants/index.js";
 import { listSessions, loadSession } from "@/store/index.js";
+import { catchToErrorResponse } from "@/errors/index.js";
 
 /**
  * 対象セッションの生データを返す。
@@ -33,38 +34,42 @@ export function registerCompactSessions(server: McpServer): void {
       },
     },
     async ({ session_ids, repo, before }) => {
-      let targets: Array<{ id: string; payload: unknown }>;
+      try {
+        let targets: Array<{ id: string; payload: unknown }>;
 
-      if (session_ids && session_ids.length > 0) {
-        const results = await Promise.all(session_ids.map(loadSession));
-        targets = results
-          .filter((r): r is NonNullable<typeof r> => r !== null)
-          .map((r) => ({ id: r.id, payload: r.payload }));
-      } else {
-        const all = await listSessions(50, repo);
-        targets = before
-          ? all
-              .filter((s) => s.payload.created_at < before)
-              .map((s) => ({ id: s.id, payload: s.payload }))
-          : all.map((s) => ({ id: s.id, payload: s.payload }));
-      }
+        if (session_ids && session_ids.length > 0) {
+          const results = await Promise.all(session_ids.map(loadSession));
+          targets = results
+            .filter((r): r is NonNullable<typeof r> => r !== null)
+            .map((r) => ({ id: r.id, payload: r.payload }));
+        } else {
+          const all = await listSessions(50, repo);
+          targets = before
+            ? all
+                .filter((s) => s.payload.created_at < before)
+                .map((s) => ({ id: s.id, payload: s.payload }))
+            : all.map((s) => ({ id: s.id, payload: s.payload }));
+        }
 
-      if (targets.length === 0) {
+        if (targets.length === 0) {
+          return {
+            content: [
+              { type: "text", text: "対象セッションが見つかりませんでした。" },
+            ],
+          };
+        }
+
         return {
           content: [
-            { type: "text", text: "対象セッションが見つかりませんでした。" },
+            {
+              type: "text",
+              text: JSON.stringify(targets, null, 2),
+            },
           ],
         };
+      } catch (err) {
+        return catchToErrorResponse(err);
       }
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(targets, null, 2),
-          },
-        ],
-      };
     },
   );
 }

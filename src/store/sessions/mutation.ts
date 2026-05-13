@@ -4,6 +4,7 @@ import type { SessionPayload } from "@/models/session.js";
 import { COLLECTION_NAME } from "@/constants/index.js";
 import { qdrant } from "@/store/client.js";
 import { loadSession } from "@/store/sessions/query.js";
+import { AppError, ErrorCode } from "@/errors/index.js";
 
 /** title + summary + key_decisions を結合して埋め込みの入力テキストを生成する */
 function buildEmbedInput(
@@ -79,7 +80,10 @@ export async function updateSession(
 ): Promise<{ session_id: string; updated_at: string }> {
   const current = await loadSession(sessionId);
   if (!current) {
-    throw new Error(`SESSION_NOT_FOUND: ${sessionId}`);
+    throw new AppError(
+      ErrorCode.SessionNotFound,
+      `session_id: ${sessionId} が見つかりませんでした`,
+    );
   }
 
   const now = new Date().toISOString();

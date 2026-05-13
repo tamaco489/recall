@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ToolName } from "@/constants/index.js";
 import { updateSession } from "@/store/index.js";
+import { catchToErrorResponse } from "@/errors/index.js";
 
 /** 指定フィールドのみ部分更新する。ベクター再生成が必要なフィールドは自動的に再生成する */
 export function registerUpdateSession(server: McpServer): void {
@@ -103,18 +104,7 @@ export function registerUpdateSession(server: McpServer): void {
           ],
         };
       } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
-        if (msg.startsWith("SESSION_NOT_FOUND")) {
-          return {
-            content: [
-              {
-                type: "text",
-                text: `session_id: ${session_id} が見つかりませんでした。`,
-              },
-            ],
-          };
-        }
-        throw err;
+        return catchToErrorResponse(err);
       }
     },
   );
