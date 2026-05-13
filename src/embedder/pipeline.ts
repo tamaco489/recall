@@ -1,5 +1,9 @@
 import { pipeline } from "@huggingface/transformers";
-import { EMBED_MODEL, EMBED_MAX_RETRIES, PipelineTask } from "@/constants.js";
+import {
+  EMBED_MODEL,
+  EMBED_MAX_RETRIES,
+  PipelineTask,
+} from "@/constants/index.js";
 
 /**
  * pipeline インスタンスをシングルトンで返す。
