@@ -15,7 +15,8 @@
   "dependencies": {
     "@huggingface/transformers": "^4.0.0",
     "@modelcontextprotocol/sdk": "^1.11.2",
-    "@qdrant/js-client-rest": "^1.13.0"
+    "@qdrant/js-client-rest": "^1.13.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
