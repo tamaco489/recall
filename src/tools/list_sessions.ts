@@ -7,6 +7,7 @@ import {
 } from "@/constants/index.js";
 import { listSessions } from "@/store/index.js";
 import { formatSessionLine } from "@/tools/format.js";
+import { catchToErrorResponse } from "@/errors/index.js";
 
 /** 最近のセッションを番号付き一覧で返す */
 export function registerListSessions(server: McpServer): void {
@@ -27,21 +28,25 @@ export function registerListSessions(server: McpServer): void {
       },
     },
     async ({ limit, repo, layer }) => {
-      const sessions = await listSessions(limit, repo, layer);
+      try {
+        const sessions = await listSessions(limit, repo, layer);
 
-      if (sessions.length === 0) {
-        return {
-          content: [
-            { type: "text", text: "セッションが見つかりませんでした。" },
-          ],
-        };
+        if (sessions.length === 0) {
+          return {
+            content: [
+              { type: "text", text: "セッションが見つかりませんでした。" },
+            ],
+          };
+        }
+
+        const lines = sessions.map((s, i) =>
+          formatSessionLine(i + 1, s.id, s.payload),
+        );
+
+        return { content: [{ type: "text", text: lines.join("\n\n") }] };
+      } catch (err) {
+        return catchToErrorResponse(err);
       }
-
-      const lines = sessions.map((s, i) =>
-        formatSessionLine(i + 1, s.id, s.payload),
-      );
-
-      return { content: [{ type: "text", text: lines.join("\n\n") }] };
     },
   );
 }
