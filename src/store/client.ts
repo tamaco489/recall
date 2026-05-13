@@ -1,5 +1,5 @@
 import { QdrantClient } from "@qdrant/js-client-rest";
-import { QDRANT_URL, COLLECTION_NAME, VECTOR_SIZE } from "@/constants.js";
+import { QDRANT_URL, COLLECTION_NAME, VECTOR_SIZE } from "@/constants/index.js";
 
 export const qdrant = new QdrantClient({ url: QDRANT_URL });
 

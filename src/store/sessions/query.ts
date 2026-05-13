@@ -3,7 +3,7 @@ import {
   COLLECTION_NAME,
   LIST_DEFAULT_LIMIT,
   LIST_MAX_LIMIT,
-} from "@/constants.js";
+} from "@/constants/index.js";
 import { embed } from "@/embedder/index.js";
 import { qdrant } from "@/store/client.js";
 

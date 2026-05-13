@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { embed } from "@/embedder/index.js";
 import type { SessionPayload } from "@/models/session.js";
-import { COLLECTION_NAME } from "@/constants.js";
+import { COLLECTION_NAME } from "@/constants/index.js";
 import { qdrant } from "@/store/client.js";
 import { loadSession } from "@/store/sessions/query.js";
 
