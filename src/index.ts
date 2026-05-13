@@ -2,6 +2,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { initCollection } from "@/store/index.js";
+import { registerTools } from "@/tools/index.js";
 
 /**
  * recall MCP サーバーのエントリポイント。
@@ -15,6 +16,7 @@ const server = new McpServer({
 });
 
 await initCollection();
+registerTools(server);
 
 /** Claude Code との通信に stdio を使用する。MCP は stdout を制御チャネルとして使うため、ログは stderr のみ */
 const transport = new StdioServerTransport();
