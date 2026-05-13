@@ -7,15 +7,15 @@ Session memory for Claude Code
 ## Development
 
 ```bash
-# セットアップ
+# Setup
 make setup
 
-# ビルド & 起動
+# Build & start
 make start
 
-# Qdrant 起動
+# Start Qdrant
 make up
 
-# Qdrant ヘルスチェック
+# Qdrant health check
 make health
 ```
