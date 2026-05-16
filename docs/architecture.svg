@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="490" viewBox="140 35 700 490" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <title>recall Architecture</title>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1e1e1e"/>
+    </marker>
+    <marker id="arrow-amber" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect x="140" y="35" width="700" height="490" fill="white"/>
+
+  <!-- Title -->
+  <text x="445" y="62" text-anchor="middle" font-size="22" font-weight="700" fill="#1e1e1e">recall Architecture</text>
+
+  <!-- Claude Code box -->
+  <rect x="210" y="80" width="240" height="68" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+  <text x="330" y="110" text-anchor="middle" font-size="17" font-weight="600" fill="#1e1e1e">Claude Code</text>
+  <text x="330" y="132" text-anchor="middle" font-size="14" fill="#444">(MCP client)</text>
+
+  <!-- Arrow: MCP (stdio) -->
+  <line x1="330" y1="148" x2="330" y2="222" stroke="#1e1e1e" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="344" y="188" font-size="13" fill="#444">MCP (stdio)</text>
+
+  <!-- recall server box -->
+  <rect x="210" y="226" width="240" height="68" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="330" y="266" text-anchor="middle" font-size="17" font-weight="600" fill="#1e1e1e">recall server</text>
+
+  <!-- Arrow: embed (to nomic) -->
+  <line x1="450" y1="260" x2="536" y2="260" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrow-amber)"/>
+
+  <!-- nomic-embed box -->
+  <rect x="538" y="215" width="215" height="90" rx="10" fill="#ffd8a8" stroke="#f59e0b" stroke-width="2"/>
+  <text x="645" y="246" text-anchor="middle" font-size="13" font-weight="600" fill="#1e1e1e">nomic-embed-text-v1.5</text>
+  <text x="645" y="264" text-anchor="middle" font-size="13" fill="#444">(local)</text>
+  <text x="645" y="282" text-anchor="middle" font-size="13" fill="#666">768-dim vector</text>
+
+  <!-- Arrow: REST -->
+  <line x1="330" y1="294" x2="330" y2="378" stroke="#1e1e1e" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="344" y="338" font-size="13" fill="#444">REST</text>
+
+  <!-- Qdrant box -->
+  <rect x="210" y="382" width="240" height="78" rx="10" fill="#c3fae8" stroke="#22c55e" stroke-width="2"/>
+  <text x="330" y="414" text-anchor="middle" font-size="17" font-weight="600" fill="#1e1e1e">Qdrant (Docker)</text>
+  <text x="330" y="436" text-anchor="middle" font-size="13" fill="#555">vector store + payload</text>
+</svg>
