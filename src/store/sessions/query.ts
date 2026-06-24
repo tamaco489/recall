@@ -29,7 +29,7 @@ function buildFilter(repo?: string, layer?: string) {
   return must.length > 0 ? { must } : undefined;
 }
 
-/** 最近のセッションを created_at 降順で返す */
+/** 最近のセッションを updated_at 降順で返す */
 export async function listSessions(
   limit: number = LIST_DEFAULT_LIMIT,
   repo?: string,
@@ -43,7 +43,7 @@ export async function listSessions(
     limit: clampedLimit,
     with_payload: true,
     with_vector: false,
-    order_by: { key: "created_at", direction: "desc" },
+    order_by: { key: "updated_at", direction: "desc" },
   });
 
   return result.points.map((p) => ({
