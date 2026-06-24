@@ -11,10 +11,14 @@ export async function initCollection(): Promise<void> {
     await qdrant.createCollection(COLLECTION_NAME, {
       vectors: { size: VECTOR_SIZE, distance: "Cosine" },
     });
-    // order_by: created_at で降順ソートするために datetime インデックスを作成する
-    await qdrant.createPayloadIndex(COLLECTION_NAME, {
-      field_name: "created_at",
-      field_schema: "datetime",
-    });
   }
+  // order_by で降順ソートするために datetime インデックスを作成する
+  await qdrant.createPayloadIndex(COLLECTION_NAME, {
+    field_name: "created_at",
+    field_schema: "datetime",
+  });
+  await qdrant.createPayloadIndex(COLLECTION_NAME, {
+    field_name: "updated_at",
+    field_schema: "datetime",
+  });
 }

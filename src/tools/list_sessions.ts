@@ -15,7 +15,7 @@ export function registerListSessions(server: McpServer): void {
     ToolName.ListSessions,
     {
       description:
-        "最近のセッションを created_at 降順の番号付き一覧で返す。load_session の番号指定に使う。",
+        "最近のセッションを updated_at 降順の番号付き一覧で返す。load_session の番号指定に使う。",
       inputSchema: {
         limit: z
           .number()
