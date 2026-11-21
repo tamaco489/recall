@@ -63,14 +63,14 @@ export async function searchSessions(
   const vector = await embed(query);
   const filter = buildFilter(repo, layer);
 
-  const result = await qdrant.search(COLLECTION_NAME, {
-    vector,
+  const result = await qdrant.query(COLLECTION_NAME, {
+    query: vector,
     limit: clampedLimit,
     filter,
     with_payload: true,
   });
 
-  return result.map((p) => ({
+  return result.points.map((p) => ({
     id: String(p.id),
     score: p.score,
     payload: asSessionPayload(p.payload),
